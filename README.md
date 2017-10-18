@@ -151,5 +151,19 @@ WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后
 * 通配符：用来匹配值得一部分的特殊字符。
 * 搜索模式： 由字面值、通配符或两者组合构成的搜索条件
 - 6.1.1 百分号（%）通配符
+```
 在搜索串中，%表示任何字符出现任意次数。例如为了找出所有以XXX起头的产品，可使用以下语句：
 输入：SELECT id,name FROM products WHERE name LIKE 'jet%';
+
+查询以S开头以e结尾的所有产品：
+输入：SELECT name FROM products WHERE name LIKE 's%e';
+注意：除了一个或多个字符外，%还能匹配0个字符。%代表搜索模式中给定位置的0个、1个或多个字符。
+```
+
+- 6.1.2 下划线 (_) 通配符
+```
+ 用途与%一样，但下划线只匹配单个字符而不是多个字符。
+ 输入：SELECT id,name FROM products WHERE name LIKE '_ ton anvil';
+```
+
+### 用正则表达式进行搜索
