@@ -26,7 +26,7 @@ SHOW GRANTS，用来显示授予用户(所有用户或特定用户)的安全权�
 SHOW ERRORS和SHOW WARNINGS，用来显示服务器错误的消息
 ```
 ### 检索数据
-- 2.1 SELECT语句
+##### 2.1 SELECT语句
 - 2.1.1 检索单个列
 ```
 SELECT name(列) FROM user;
