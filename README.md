@@ -75,5 +75,79 @@ DESC关键字只应用到直接位于其前面的列名。对于不指定的列�
 必须对每个列指定DESC关键字。与DESC相反的关键字是ASC，在升序排序时可以指定它。
 ```
 
+### 过滤数据
+#### 4.1 使用WHERE子句
+```
+在SELECT语句中，数据根据WHERE子句中指定的搜索条件进行过滤。WHERE子句在表名（FROM子句）之后给出，
+输入：SELECT name,price FROM products WHERE price=2.50;
+注意：ORDER BY位于WHERE子句之后
+```
+#### 4.2 WHERE子句操作符
+- 4.1.1 检查单个值
+```
+输入：SELECT name,price FROM products WHERE name='jack';
+它返回的是name值为Jack的这一行，MySQL在执行匹配时默认不区分大小写。
 
+1.列出价格小于10美元的所以产品
+输入：SELECT name,price FROM products WHERE price <10;
+2.列出价格小于等于10美元的所以产品
+输入：SELECT name,price FROM products WHERE price <=10;
+```
+
+- 4.1.2 不匹配检查
+```
+列出不是由供应商1003制造的所有产品
+输入：SELECT id,name WHERE id <>1003;
+```
+- 4.1.3 范围值检查
+```
+检查某个范围的值，用between操作符。
+例：检索价格在5美元和10美元之间的所有产品
+输入：SELECT name,price FROM products WHERE price BETWEEN 5 AND 10;
+```
+- 4.1.4 空值检查
+```
+在一个列不包含值时，称其为包含空值NULL。
+NULL 无值，它与字段包含0、空字符串或仅仅包含空格不同。
+SELECT语句有一个特殊的WHERE子句，可用来检查具有NULL值得列。这个WHERE子句就是IS NULL子句。语法如下：
+SELECT name FROM products WHERE price IS NULL;
+```
+### 数据过滤
+#### 5.1 组合WHERE子句（以AND子句的方式或OR子句的方式使用）
+- 5.1.1 AND操作符
+```
+查询由供应商1003制造且价格小于等于10美元的所有产品的名称和价格。
+输入：SELECT id,name,price FROM products WHERE id=1003 AND price<=10;
+```
+- 5.1.2 OR操作符
+```
+OR操作符与AND操作符不同，它指示MySQL检索匹配任一条件进行的行
+查询由任一个指定供应商制造的所有产品的产品名和价格
+输入： SELECT name,price FROM products WHERE id=1002 OR id=1003;
+```
+- 5.1.3 计算次序
+```
+查询价格为10美元(含)以上且由1002或1003制造的所有产品。
+输入：SELECT id,price,name FROM products WHERE (id=1002 OR id=1003) AND price>=10; 
+(SQL在处理OR操作符前，优先处理AND操作符。AND在计算次序中优先级更高。任何时候使用具有AND和OR操作符的WHERE子句，
+都应该使用圆括号明确地分组操作符，不要过分依赖默认计算次序)
+```
+#### 5.2 IN操作符
+```
+IN操作符用来指定条件范围，范围中的每个条件都可以进行匹配。IN操作符用来指定条件范围，范围中的每个条件都可以进行匹配。IN取合法值的由逗号分隔的清单，全都括在圆括号中。
+如查询供应商1002和1003制造的所有产品：
+SELECT id,price,name FROM products WHERE id IN (1002,1003) ORDER BY name; 
+也可以用OR来写：
+SELECT id,price,name FROM products WHERE (id=1002 OR id=1003) ORDER BY name;
+```
+#### NOT操作符
+```
+WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后所跟的任何条件。
+查询除了1002和1003之外的所有供应商制造的产品。
+输入：SELECT name,price FROM products WHERE  id NOT IN(1002,1003) ORDER BY name;
+```
+### 用通配符进行过滤
+#### 6.1 LIKE操作符
+* 通配符：用来匹配值得一部分的特殊字符。
+* 搜索模式： 由字面值、通配符或两者组合构成的搜索条件
 
