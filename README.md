@@ -167,3 +167,100 @@ WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后
 ```
 
 ### 用正则表达式进行搜索
+#### 7.1 使用MySQL正则表达式
+- 7.1.1 基本字符匹配
+```
+查询检索列name包含文本1000的所有行
+输入：SELECT name FROM products WHERE name REGEXP '1000' ORDER BY name;
+输出：-------------
+     |    name    |
+     |------------|
+     |jetPack 1000|
+     --------------
+     
+查询检索列name包含文本000的所有行
+输入：SELECT name FROM products WHERE name REGEXP '.000' ORDER BY name;
+输出 +------------+
+     |    name    |
+     |------------|
+     |jetPack 1000|
+     |jetPack 2000|           |
+     +------------+
+ 分析：这里使用了正则表达式 .000。.是正则表达式语言中一个特殊的字符。它表示匹配任意一个字符。
+ 
+ 问题：如果使用关键字LIKE会如何？
+ SELECT name FROM products WHERE name LIKE '1000' ORDER BY name;
+ SELECT name FROM products WHERE name REGEXP '1000' ORDER BY name;
+ 如果执行上述两条语句，第一条语句不返回数据，第二条返回一行数据。
+ 原因：LIKE匹配整个列，如果被匹配的文本在列值中出现，不会找到，相应的行也不会返回。而REGEXP在列值内匹配，
+ 如果被匹配的文本在列值中出现，REGEXP会找到，返回相应的行。
+ REGEXP能用来匹配整个列值（从而与LIKE相同的作用），使用^和$定位符即可
+ MySQL中的正则表达式匹配不区分大小写。为了区分大小写可使用BINARY关键字。 如：WHERE name REGEXP BINARY 'JetPack .000'.
+```
+- 7.1.2 进行OR匹配（使用|）
+```
+输入：SELECT name FROM products WHERE name REGEXP '1000|2000' ORDER BY name;
+输出 +------------+
+     |    name    |
+     |------------|
+     |jetPack 1000|
+     |jetPack 2000|           
+     +------------+
+ 使用|从功能上类似于在SELECT语句中使用OR语句，多个OR条件可以并入单个正则表达式。
+ ```
+ - 7.1.3 匹配几个字符之一
+ ```
+ 输入：SELECT name FROM products WHERE name REGEXP '[123] Ton' ORDER BY name;
+ 输出 +------------+
+      |    name    |
+      |------------|
+      | 1 ton anvil|
+      | 2 ton anvil|           
+      +------------+   
+ 分析：[123]定义一组字符，意为匹配1或2或3。[]是另一种形式的OR语句。
+ ```
+
+- 7.1.4 匹配范围
+*集合可用来定义要匹配的一个或多个字符。
+
+- 7.1.5 匹配特殊字符
+```
+查询包含 .字符的值。
+输入： SLELECT name FROM vendors WHERE name REGEXP '\\.' ORDER BY name;
+分析： .匹配任意的字符，因此为了匹配特殊字符，必须用\\为前导。 \\-表示查找- 。 \\.表示查找.
+```
+### 创建计算字段
+#### 8.1 拼接字段
+- 拼接：将值联结到一起构成单个值。在MySQL的SELECT语句中，可使用Concat()函数来拼接两个列
+```
+输入：SELECT Concat(name, '(',country,')') FROM verdors ORDER BY name;
+输出  +--------------------------------+
+      |  Concat(name,  '(',country,')') |
+      |---------------------------------|
+      | ACME （USA)                     |
+      | Anvils  R Us (USA)              |
+      | Furball Inc. (USA)              |
+      | Jet Set (England)               |
+      | Jouets Et Ours (France)         |
+      +---------------------------------+
+ 
+ 通过删除数据右侧多余的空格来整理数据，可以使用MySQL的RTrim()函数来完成。
+ 输入：SELECT Concat(RTrim(name), '(', RTrim(country),')') FROM verdors ORDER BY name; 
+ 分析：RTrim()函数去掉值右边的所有空格。通过使用RTrim(),各个列都进行了整理。
+```
+#### 执行算术计算
+```
+查询订单号为20005中的所有物品中包含订单中每项物品的单价。
+输入：SELECT id,quantity,price,quantity * price AS expanded_price FROM orderitems WHERE num=20005;
+
+输出  +--------+----------+---------+----------------+
+      |   id   | quantity |  price  | expanded_price |
+      |--------+----------+---------+----------------+
+      |  ANV01 |    10    |   5.99  |     59.90      |
+      |  ANV02 |     3    |   9.99  |     29.97      |
+      |  TNT2  |     5    |  10.00  |     50.00      |
+      |   FB   |     1    |  10.00  |     10.00      |
+      +--------+----------+---------+----------------+      
+```
+
+ 
