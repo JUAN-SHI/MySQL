@@ -248,7 +248,7 @@ WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后
  输入：SELECT Concat(RTrim(name), '(', RTrim(country),')') FROM verdors ORDER BY name; 
  分析：RTrim()函数去掉值右边的所有空格。通过使用RTrim(),各个列都进行了整理。
 ```
-#### 执行算术计算
+#### 8.2 执行算术计算
 ```
 查询订单号为20005中的所有物品中包含订单中每项物品的单价。
 输入：SELECT id,quantity,price,quantity * price AS expanded_price FROM orderitems WHERE num=20005;
@@ -263,4 +263,44 @@ WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后
       +--------+----------+---------+----------------+      
 ```
 
- 
+### 使用数据处理函数
+#### 9.1 函数
+- 9.1.1 常用的文本处理函数
+```
+——————————————————————————————————————————————————————————————————————————
+           函数                                       说明
+——————————————————————————————————————————————————————————————————————————
+          Left()                                   返回串左边的字符
+          Length()                                 返回串的长度
+          Locate()                                 找出串的一个子串
+          LTrim()                                  去掉串左边的空格
+          Right()                                  返回串右边的字符
+          RTrim()                                  去掉串右边的空格
+          Soundex()                                返回串的SOUNDEX值
+          SubString()                              返回子串的字符
+          Upper()                                  将串转换为大写
+——————————————————————————————————————————————————————————————————————————
+SOUNDEX是一个将任何文本串转换为描述其语音表示的字母数字模式算法。SOUNDEX考虑了类似发音字符和音节，使得对串进行发音比较而不是字母比较。
+customers表中有一个顾客Coyote Inc.,其联系名为Y.Lee ,但是如果输入错误，此联系名实际应该是Y.Lie。输入后不会返回数据
+输入：SELECT name,contact FROM customers WHERE contact='Y.Lie'
+输出：+------------+-------------+
+     |    name     |  contact    |
+     +-------------|-------------+ 
+     
+
+用过Soundex()函数进行搜索，它匹配所有发音类似于Y.Lie的联系名：
+输入：SELECT name,concat FROM customers WHERE Soundex(contact)=Soundex('Y.Lie');
+输出：+------------+--------------+
+     |    name     |  contact    |
+     +-------------+-------------+ 
+     | Coyote Inc. |   Y.Lee     |
+     +--------------+------------+ 
+```
+
+- 9.1.2 日期和时间处理函数
+```
+输入：SELECT id,num FROM orders WHERE Date(date)='2005-09-01';
+查询2005年9月下的所有订单
+输入：SELECT id,num FROM orders WHERE Date(date) BETWEEN '2005-09-01' AND '2005-09-30';
+或者：SELECT id,num FROM orders WHERE Year(date)=2005 AND Month(date)=9 ;(检索出2015年9月的所有行)
+```
