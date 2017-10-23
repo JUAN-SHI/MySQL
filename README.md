@@ -367,5 +367,91 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
         LIMIT                 要检索的行数                            否
 ————————————————————————————————————————————————————————————————————————————————————————————
 ```
+
+### 使用子查询  
+#### 12.1 利用子查询进行过滤
+```
+查询id为TNT2的所有订单物品。
+输入：SELECT num FROM orderties WHERE id='TNT2';
+输出 +------------+
+     |    num     |
+     |------------|
+     |   20005    |
+     |   20007    |           
+     +------------+
+     
+ 查询具有订单20005和20007的客户id.
+ 输入：SELECT cust_id FROM orders WHERE order_num IN (20005,20007);
+ 输出+------------+
+     |   cust_id  |
+     |------------|
+     |   10001    |
+     |   10004    |           
+     +------------+
      
-     
+ 查询具有id为TNT2的所有订单物品的客户ID信息
+ 输入： SELECT cust_id FROM  orders WHERE num IN (SELECT num FROM orders WHERE id='TNT2');
+ 输出 +------------+
+      |   cust_id  |
+      |------------|
+      |   10001    |
+      |   10004    |           
+      +------------+
+
+ 查询订购物品为TNT2的所有客户id所对应的客户信息。
+ 输入：SELECT cust_name,cust_contact FROM orders WHERE cust_id IN 
+ (SELECT cust_id FROM orders WHERE cust_num IN (SELECT cust_num FROM orderitems WHERE id='TNT2'));
+ 输出 +--------------+--------------+
+      |  cust_name   | cust_contact |
+      +--------------+--------------+ 
+      | Coyote Inc.  |   Y Lee      |
+      +--------------+--------------+
+      |Yosemite Place|   Y Sam      |
+      +--------------+--------------+ 
+```
+#### 12.2 作为计算字段使用子查询
+```
+查询customers表中每个客户的订单总数。订单与相应的客户ID存储在orders表中
+输入：SELECT cust_name,cust_state,(SELECT count( * )  FROM  orders WHERE orders.cust_id=customers.cust_id) total_order 
+     FROM customers ORDER BY cust_name; 
+ 输出 +--------------+--------------+--------------+
+      |  cust_name   | cust_state   | total_order  |
+      +--------------+--------------+--------------+ 
+      | Coyote Inc.  |      MI      |      2       |
+      | E Fudd       |      IL      |      1       |
+      | Mouse House  |      OH      |      0       |   
+      | Wascals      |      IN      |      1       |
+      |Yosemite Place|      AZ      |      1       |
+      +--------------+--------------+--------------+
+  ```
+  ### 联结表
+  #### 联结单个表
+  - 13.1 笛卡尔积
+  *由没有联结条件的表关系返回的结果为笛卡尔积，检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
+  
+  - 13.2 内部联结
+  *目前为止所用的联结称为等值联结，它基于两个表之间的相等测试。这种联结也称为内部联结。
+  ```
+  输入：SELECT vend_name,prod_name,prod_price FROM vendors INNER JOIN products ON vendors.vend_id=products.vend_id;
+  ```
+ 
+ #### 联结多个表
+ ```
+ 查询编号为20005的订单中的物品的prod_name,vend_name,prod_price,quantity
+ 输入：SELECT prod_name,vend_name,prod_price, quantity 
+       FROM  ordertiems,products,vendors 
+       WHERE prodcuts.vend_id=vendors.vend_id 
+       AND orderitems.prod_id=products.prod_id 
+       AND order_num=20005; 
+  ```    
+   
+ ### 创建高级联结
+ #### 自联结
+ ```
+ 普通子查询：
+ 查询ID为DINTR的物品的供应商生产的其他物品
+ 输入：SELECT prod_id,prod_name FROM products WHERE vend_id=(SELECT vend_id FROM products WHERE prod_id='DINTR');
+ 自联结查询：
+ 输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
+ ```
+
