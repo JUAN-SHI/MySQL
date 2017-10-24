@@ -446,7 +446,7 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
   ```    
    
  ### 创建高级联结
- #### 自联结
+ #### 14.1 自联结
  ```
  普通子查询：
  查询ID为DINTR的物品的供应商生产的其他物品
@@ -454,4 +454,37 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
  自联结查询：
  输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
  ```
+#### 14.2 外部联结
+```
+为了检索所有客户，包括那些没有订单的客户。
+SELECT customers.cust_id,orders.order_num FROM customers LEFT OUTER JOIN orders ON customers.cust_id=orders.cust_id;
+在使用OUTER  JOIN语法时，必须使用RIGHT或者LEFT关键字指定包括其所有行的表(RIGHT指出的是OUTER JOIN 右边的表，而LEFT指出的是OUTER JOIN左边的表)
+```
 
+### 组合查询
+####  15.1 组合查询
+- MySQL也允许执行多个查询，并将结果作为单个查询结果集返回。这些组合查询通常称为并或复合查询
+- 有两种基本情况，其中需要使用组合查询：
+1. 在单个查询中从不同的表返回类似结构的数据；
+2. 对单个表执行多个查询，按单个查询返回数据。
+
+#### 15.2 创建组合查询
+```
+可用UNION操作符来组合数条SQL查询。利用UNION，可给出多条SELECT语句，将他们的结果组合成单个结果集。
+需要查询价格小于等于5的所有物品的一个列表，而且还想包括供应商1001和1002生产的所有物品(不考虑价格)
+WHERE 语句
+输入：SELECT vend_id，prod_id,prod_price FROM products WHERE prod_price <= 5 OR vend_id IN (1001,1002);
+UNION规则
+UNION必须由两条或两条以上的SELECT语句组成，语句之间用关键字UNION分隔。
+UNION中的每个查询必须包含相同的列、表达式或聚集函数
+列数据类型必须兼容：类型不必完全相同，但必须是DBMS可以隐含地转换的类型
+输入：SELECT vend_id, prod_id, prod_price FROM products WHERE prod_price <=5 
+     UNION 
+     SELECT vend_id, prod_id, prod_price FROM products WHERE vend_id IN （1001，1002）；
+```
+#### 15.3 包含或取消重复的行
+- UNION从查询结果集中自动去除了重复的行。这是UNION的默认行为。使用UNION ALL，MySQL不取消重复的行，
+#### 15.4 对组合查询结果排序
+- SELCT 语句的输出用ORDER BY子句排序。在用UNION组合查询时，只能使用一条ORDER BY子句，它必须出现在最后一条SELECT 语句之后。
+
+     UNION 
