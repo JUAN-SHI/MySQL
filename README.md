@@ -424,14 +424,17 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
       |Yosemite Place|      AZ      |      1       |
       +--------------+--------------+--------------+
   ```
-  ### 联结表
+ 
+ 
+ ### 联结表
   #### 联结单个表
   - 13.1 笛卡尔积
   *由没有联结条件的表关系返回的结果为笛卡尔积，检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
   
   - 13.2 内部联结
   *目前为止所用的联结称为等值联结，它基于两个表之间的相等测试。这种联结也称为内部联结。
-  ```
+ 
+ ```
   输入：SELECT vend_name,prod_name,prod_price FROM vendors INNER JOIN products ON vendors.vend_id=products.vend_id;
   ```
  
