@@ -444,7 +444,7 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
        WHERE prodcuts.vend_id=vendors.vend_id 
        AND orderitems.prod_id=products.prod_id 
        AND order_num=20005; 
- ```    
+```    
    
 
 ### 创建高级联结
@@ -455,7 +455,7 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
  输入：SELECT prod_id,prod_name FROM products WHERE vend_id=(SELECT vend_id FROM products WHERE prod_id='DINTR');
  自联结查询：
  输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
- ```
+```
 
 
 #### 14.2 外部联结
@@ -536,7 +536,7 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
  更新多个列：
  输入：UPDATE customers SET cust_name='The Fudds', cust_email='elmer@fudd.com' WHERE cust_id=10005;
  在更新多个列时，只需要使用单个SET命令，每个“列=值”对之间用逗号分隔。
- ```
+```
  
  
  #### 17.2 删除数据
@@ -549,7 +549,7 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 ```
  输入：从customers表中删除一行：DELETE FROM customers WHERE cust_id=10006;
  DELETE 不需要列名或通配符。DELETE删除整行而不是整列。为了删除指定的列，使用UPDATE语句。
- ```
+```
 
 - 删除表的内容还不是表：DELETE语句从表中删除行，甚至是删除表中所有行，但是，DELETE 不删除表本身。
  
@@ -559,7 +559,7 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
  - 新表的名字，在关键字CREATE TABLE之后给出；
  - 表列的名字个定义，用逗号分隔.
  
- ```
+```
  用MySQL语句创建customers表：
  CREATE TABLE customers
  (
