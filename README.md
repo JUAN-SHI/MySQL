@@ -484,7 +484,100 @@ UNION中的每个查询必须包含相同的列、表达式或聚集函数
 ```
 #### 15.3 包含或取消重复的行
 - UNION从查询结果集中自动去除了重复的行。这是UNION的默认行为。使用UNION ALL，MySQL不取消重复的行，
-#### 15.4 对组合查询结果排序
-- SELCT 语句的输出用ORDER BY子句排序。在用UNION组合查询时，只能使用一条ORDER BY子句，它必须出现在最后一条SELECT 语句之后。
 
-   
+#### 15.4 对组合查询结果排序
+- SELCT 语句的输出用ORDER BY子句排序。在用UNION组合查询时，只能使用一条ORDER BY子句，它必须出现在最后一条SELECT 语句之后
+。
+
+### 插入数据
+#### 16.1 插入完整的行 
+```
+把数据插入表中的最简单方法是使用基本的INSERT语法，它要求指定表名和被插入到新行中的值。
+输入：INSERT INTO customers VALUES（'zhangsan','男'，20）;
+INSERT 语句一般不会产生输出
+```
+#### 16.2 插入多个行
+```
+只要每条INSERT语句中的列名相同，可如下：
+输入：INSERT INTO customers（cust_name,cust_address,cust_city,cust_zip,cust_country) 
+VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
+('Martian','42 Galaxy Street','New York'，'NY', '11213', 'USA');
+输入：INSERT INTO customers（cust_name,cust_address,cust_city,cust_zip,cust_country) VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'), ('Martian','42 Galaxy Street','New York'，'NY', '11213', 'USA');
+其中单条INSERT语句有多组值，每组值用一对圆括号括起来，用逗号分隔。
+```
+### 更新和删除数据
+#### 17.1 更新数据
+- 为了更新（修改）表中的数据，可使用UPDATE语句。可采用两种方式使用过UPDATE：
+1. 更新表中特定行。
+2. 更新表中所有行。
+- 基本的UPDATE语句由三部分组成，分别是：
+1. 要更新的表；
+2. 列名和他们的新值；
+3. 确定要更新行的过滤条件
+
+```
+查询客户10005现在有了电子邮件地址，因此他的记录需要更新
+输入：UPDATE customers SET cust_email= 'elmer@fudd.com'
+     WHERE cust_id=10005;
+ UPDATE语句总是以要更新的表的名字开始。在此例子中，要更新的表的名字为customers。SET命令用来将新值赋给被更新的列。
+ UPDATE语句以WHERE子句结束，它告诉MySQL更新哪一行。没有WHERE子句，MySQL将会更新customers表中所有行。
+ 
+ 更新多个列：
+ 输入：UPDATE customers SET cust_name='The Fudds', cust_email='elmer@fudd.com' WHERE cust_id=10005;
+ 在更新多个列时，只需要使用单个SET命令，每个“列=值”对之间用逗号分隔。
+ ```
+ #### 17.2 删除数据
+ - 为了从一个表中删除数据，使用DELETE语句。可以使用两种方式
+ 1. 从表中删除特定的行，
+ 2. 从表中删除所有行。
+ - 不要省略WHERE子句，否则就会删除表中所有的行。
+ ```
+ 输入：从customers表中删除一行：DELETE FROM customers WHERE cust_id=10006;
+ DELETE 不需要列名或通配符。DELETE删除整行而不是整列。为了删除指定的列，使用UPDATE语句。
+ ```
+ - 删除表的内容还不是表：DELETE语句从表中删除行，甚至是删除表中所有行，但是，DELETE 不删除表本身。
+ 
+ ### 创建和操作表
+ #### 18.1 利用CREATE TABLE 创建表：
+ - 新表的名字，在关键字CREATE TABLE之后给出；
+ - 表列的名字个定义，用逗号分隔.
+ ```
+ 用MySQL语句创建customers表：
+ CREATE TABLE customers
+ (
+    cust_id      int       NOT NULL AUTO_INCREMENT,
+    cust_name    char(50)  NOT NULL,
+    cust_address char(50)  NULL,
+    cust_country char(50)  NULL,
+    cust_email   char(255) NULL,
+    PRIMARY KEY (cust_id)
+ ）
+```
+#### 18.2 更新表
+- 为更新表定义，可使用ALTER TABLE语句。在理想状态下，当表中存储数据之后，该表就不应该再被更新。
+```
+输入: ALTER TABLE venders ADD vend_phone CHAR(20);
+删除刚刚添加的列，可以这样做：
+输入：ALTER TABLE vendors DROP COLUMN vend_phone;
+```
+#### 18.3 删除表
+- 使用DROP TABLE语句即可
+```
+输入： DROP TABLE custmoers;
+```
+#### 18.4 重命名表
+- 使用RENAME TABLE 语句可以重命名一个表：
+```
+输入：RENAME TABLE customer2 TO customers;
+```
+### 使用视图
+#### 19.1 视图
+- 视图是虚拟的表，与包含数据的表不一样，视图只包含使用时动态检索数据的查询。
+#### 19.2 视图的规则和限制
+- 与表一样，视图必须唯一命名（不能给视图取与别的视图或表相同的名字）
+- 对于可以创建的视图数目没有限制
+- 为了创建视图，必须具有足够的访问权限。这些限制通常由数据库管理人员授予。
+- 视图可以嵌套，即可以利用从其他视图中检索数据的查询来构造一个视图。
+- ORDER BY 可以用在视图中，但如果从该视图检索数据SELECT中也含有ORDER BY,那么该视图中的ORDER BY将被覆盖。
+- 视图不能索引，也不能有关联的触发器或默认值。
+- 视图可以和表一起使用。例如：编写一条联结表和视图的SELECT语句。
