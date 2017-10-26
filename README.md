@@ -234,7 +234,7 @@ WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后
 - 拼接：将值联结到一起构成单个值。在MySQL的SELECT语句中，可使用Concat()函数来拼接两个列
 ```
 输入：SELECT Concat(name, '(',country,')') FROM verdors ORDER BY name;
-输出  +--------------------------------+
+输出  +----------------------------------+
       |  Concat(name,  '(',country,')') |
       |---------------------------------|
       | ACME （USA)                     |
@@ -253,7 +253,7 @@ WHERE子句中的NOT操作符有且只有一个功能，那就是否定它之后
 查询订单号为20005中的所有物品中包含订单中每项物品的单价。
 输入：SELECT id,quantity,price,quantity * price AS expanded_price FROM orderitems WHERE num=20005;
 
-输出  +--------+----------+---------+----------------+
+输出  +--------+----------+---------+-----------------+
       |   id   | quantity |  price  | expanded_price |
       |--------+----------+---------+----------------+
       |  ANV01 |    10    |   5.99  |     59.90      |
@@ -410,9 +410,7 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
       +--------------+--------------+ 
 ```
 
-
 #### 12.2 作为计算字段使用子查询
-
 ```
 查询customers表中每个客户的订单总数。订单与相应的客户ID存储在orders表中
 输入：SELECT cust_name,cust_state,(SELECT count( * )  FROM  orders WHERE orders.cust_id=customers.cust_id) total_order 
@@ -430,18 +428,17 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
  
  
 ### 联结表
-#### 联结单个表
-- 13.1 笛卡尔积
-*由没有联结条件的表关系返回的结果为笛卡尔积，检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
+#### 13.1 联结单个表
+- 13.1.1 笛卡尔积
+- 由没有联结条件的表关系返回的结果为笛卡尔积，检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
   
-- 13.2 内部联结
-*目前为止所用的联结称为等值联结，它基于两个表之间的相等测试。这种联结也称为内部联结。
-
+- 13.1.2 内部联结
 ```
+目前为止所用的联结称为等值联结，它基于两个表之间的相等测试。这种联结也称为内部联结。
 输入：SELECT vend_name,prod_name,prod_price FROM vendors INNER JOIN products ON vendors.vend_id=products.vend_id;
 ```
  
-#### 联结多个表
+#### 13.2 联结多个表
 ```
  查询编号为20005的订单中的物品的prod_name,vend_name,prod_price,quantity
  输入：SELECT prod_name,vend_name,prod_price, quantity 
@@ -451,21 +448,19 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
        AND order_num=20005; 
  ```    
    
+
 ### 创建高级联结
 #### 14.1 自联结
-
 ```
  普通子查询：
  查询ID为DINTR的物品的供应商生产的其他物品
  输入：SELECT prod_id,prod_name FROM products WHERE vend_id=(SELECT vend_id FROM products WHERE prod_id='DINTR');
  自联结查询：
  输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
- 
-```
+ ```
 
 
 #### 14.2 外部联结
-
 ```
 为了检索所有客户，包括那些没有订单的客户。
 SELECT customers.cust_id,orders.order_num FROM customers LEFT OUTER JOIN orders ON customers.cust_id=orders.cust_id;
@@ -604,11 +599,10 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 输入：RENAME TABLE customer2 TO customers;
 ```
 
-
-
 ### 使用视图
 #### 19.1 视图
 - 视图是虚拟的表，与包含数据的表不一样，视图只包含使用时动态检索数据的查询。
+
 #### 19.2 视图的规则和限制
 - 与表一样，视图必须唯一命名（不能给视图取与别的视图或表相同的名字）
 - 对于可以创建的视图数目没有限制
