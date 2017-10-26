@@ -409,7 +409,10 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
       |Yosemite Place|   Y Sam      |
       +--------------+--------------+ 
 ```
+
+
 #### 12.2 作为计算字段使用子查询
+
 ```
 查询customers表中每个客户的订单总数。订单与相应的客户ID存储在orders表中
 输入：SELECT cust_name,cust_state,(SELECT count( * )  FROM  orders WHERE orders.cust_id=customers.cust_id) total_order 
@@ -426,43 +429,49 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
   ```
  
  
- ### 联结表
-  #### 联结单个表
-  - 13.1 笛卡尔积
-  *由没有联结条件的表关系返回的结果为笛卡尔积，检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
+### 联结表
+#### 联结单个表
+- 13.1 笛卡尔积
+*由没有联结条件的表关系返回的结果为笛卡尔积，检索出的行的数目将是第一个表中的行数乘以第二个表中的行数
   
-  - 13.2 内部联结
-  *目前为止所用的联结称为等值联结，它基于两个表之间的相等测试。这种联结也称为内部联结。
+- 13.2 内部联结
+*目前为止所用的联结称为等值联结，它基于两个表之间的相等测试。这种联结也称为内部联结。
+
+```
+输入：SELECT vend_name,prod_name,prod_price FROM vendors INNER JOIN products ON vendors.vend_id=products.vend_id;
+```
  
- ```
-  输入：SELECT vend_name,prod_name,prod_price FROM vendors INNER JOIN products ON vendors.vend_id=products.vend_id;
-  ```
- 
- #### 联结多个表
- ```
+#### 联结多个表
+```
  查询编号为20005的订单中的物品的prod_name,vend_name,prod_price,quantity
  输入：SELECT prod_name,vend_name,prod_price, quantity 
        FROM  ordertiems,products,vendors 
        WHERE prodcuts.vend_id=vendors.vend_id 
        AND orderitems.prod_id=products.prod_id 
        AND order_num=20005; 
-  ```    
+ ```    
    
- ### 创建高级联结
- #### 14.1 自联结
- ```
+### 创建高级联结
+#### 14.1 自联结
+
+```
  普通子查询：
  查询ID为DINTR的物品的供应商生产的其他物品
  输入：SELECT prod_id,prod_name FROM products WHERE vend_id=(SELECT vend_id FROM products WHERE prod_id='DINTR');
  自联结查询：
  输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
- ```
+ 
+```
+
+
 #### 14.2 外部联结
+
 ```
 为了检索所有客户，包括那些没有订单的客户。
 SELECT customers.cust_id,orders.order_num FROM customers LEFT OUTER JOIN orders ON customers.cust_id=orders.cust_id;
 在使用OUTER  JOIN语法时，必须使用RIGHT或者LEFT关键字指定包括其所有行的表(RIGHT指出的是OUTER JOIN 右边的表，而LEFT指出的是OUTER JOIN左边的表)
 ```
+
 
 ### 组合查询
 ####  15.1 组合查询
@@ -472,6 +481,7 @@ SELECT customers.cust_id,orders.order_num FROM customers LEFT OUTER JOIN orders 
 2. 对单个表执行多个查询，按单个查询返回数据。
 
 #### 15.2 创建组合查询
+
 ```
 可用UNION操作符来组合数条SQL查询。利用UNION，可给出多条SELECT语句，将他们的结果组合成单个结果集。
 需要查询价格小于等于5的所有物品的一个列表，而且还想包括供应商1001和1002生产的所有物品(不考虑价格)
@@ -485,12 +495,13 @@ UNION中的每个查询必须包含相同的列、表达式或聚集函数
      UNION 
      SELECT vend_id, prod_id, prod_price FROM products WHERE vend_id IN （1001，1002）；
 ```
+
 #### 15.3 包含或取消重复的行
 - UNION从查询结果集中自动去除了重复的行。这是UNION的默认行为。使用UNION ALL，MySQL不取消重复的行，
 
 #### 15.4 对组合查询结果排序
-- SELCT 语句的输出用ORDER BY子句排序。在用UNION组合查询时，只能使用一条ORDER BY子句，它必须出现在最后一条SELECT 语句之后
-。
+- SELCT 语句的输出用ORDER BY子句排序。在用UNION组合查询时，只能使用一条ORDER BY子句，它必须出现在最后一条SELECT 语句之后。
+
 
 ### 插入数据
 #### 16.1 插入完整的行 
@@ -499,6 +510,8 @@ UNION中的每个查询必须包含相同的列、表达式或聚集函数
 输入：INSERT INTO customers VALUES（'zhangsan','男'，20）;
 INSERT 语句一般不会产生输出
 ```
+
+
 #### 16.2 插入多个行
 ```
 只要每条INSERT语句中的列名相同，可如下：
@@ -508,6 +521,8 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 输入：INSERT INTO customers（cust_name,cust_address,cust_city,cust_zip,cust_country) VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'), ('Martian','42 Galaxy Street','New York'，'NY', '11213', 'USA');
 其中单条INSERT语句有多组值，每组值用一对圆括号括起来，用逗号分隔。
 ```
+
+
 ### 更新和删除数据
 #### 17.1 更新数据
 - 为了更新（修改）表中的数据，可使用UPDATE语句。可采用两种方式使用过UPDATE：
@@ -529,21 +544,28 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
  输入：UPDATE customers SET cust_name='The Fudds', cust_email='elmer@fudd.com' WHERE cust_id=10005;
  在更新多个列时，只需要使用单个SET命令，每个“列=值”对之间用逗号分隔。
  ```
+ 
+ 
  #### 17.2 删除数据
  - 为了从一个表中删除数据，使用DELETE语句。可以使用两种方式
  1. 从表中删除特定的行，
  2. 从表中删除所有行。
  - 不要省略WHERE子句，否则就会删除表中所有的行。
- ```
+
+
+```
  输入：从customers表中删除一行：DELETE FROM customers WHERE cust_id=10006;
  DELETE 不需要列名或通配符。DELETE删除整行而不是整列。为了删除指定的列，使用UPDATE语句。
  ```
- - 删除表的内容还不是表：DELETE语句从表中删除行，甚至是删除表中所有行，但是，DELETE 不删除表本身。
+
+- 删除表的内容还不是表：DELETE语句从表中删除行，甚至是删除表中所有行，但是，DELETE 不删除表本身。
  
- ### 创建和操作表
- #### 18.1 利用CREATE TABLE 创建表：
+
+### 创建和操作表
+#### 18.1 利用CREATE TABLE 创建表：
  - 新表的名字，在关键字CREATE TABLE之后给出；
  - 表列的名字个定义，用逗号分隔.
+ 
  ```
  用MySQL语句创建customers表：
  CREATE TABLE customers
@@ -556,6 +578,9 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
     PRIMARY KEY (cust_id)
  ）
 ```
+
+
+
 #### 18.2 更新表
 - 为更新表定义，可使用ALTER TABLE语句。在理想状态下，当表中存储数据之后，该表就不应该再被更新。
 ```
@@ -563,16 +588,24 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 删除刚刚添加的列，可以这样做：
 输入：ALTER TABLE vendors DROP COLUMN vend_phone;
 ```
+
+
+
 #### 18.3 删除表
 - 使用DROP TABLE语句即可
 ```
 输入： DROP TABLE custmoers;
 ```
+
+
 #### 18.4 重命名表
 - 使用RENAME TABLE 语句可以重命名一个表：
 ```
 输入：RENAME TABLE customer2 TO customers;
 ```
+
+
+
 ### 使用视图
 #### 19.1 视图
 - 视图是虚拟的表，与包含数据的表不一样，视图只包含使用时动态检索数据的查询。
