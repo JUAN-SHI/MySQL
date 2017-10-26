@@ -443,10 +443,11 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
        WHERE prodcuts.vend_id=vendors.vend_id 
        AND orderitems.prod_id=products.prod_id 
        AND order_num=20005; 
-```    
+```   
 
 ### 创建高级联结
 #### 14.1 自联结
+
 ```
  普通子查询：
  查询ID为DINTR的物品的供应商生产的其他物品
@@ -454,12 +455,14 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
  自联结查询：
  输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
 ```
+
 #### 14.2 外部联结
 ```
 为了检索所有客户，包括那些没有订单的客户。
 SELECT customers.cust_id,orders.order_num FROM customers LEFT OUTER JOIN orders ON customers.cust_id=orders.cust_id;
 在使用OUTER  JOIN语法时，必须使用RIGHT或者LEFT关键字指定包括其所有行的表(RIGHT指出的是OUTER JOIN 右边的表，而LEFT指出的是OUTER JOIN左边的表)
 ```
+
 ### 组合查询
 ####  15.1 组合查询
 - MySQL也允许执行多个查询，并将结果作为单个查询结果集返回。这些组合查询通常称为并或复合查询
@@ -496,6 +499,7 @@ UNION中的每个查询必须包含相同的列、表达式或聚集函数
 输入：INSERT INTO customers VALUES（'zhangsan','男'，20）;
 INSERT 语句一般不会产生输出
 ```
+
 #### 16.2 插入多个行
 ```
 只要每条INSERT语句中的列名相同，可如下：
@@ -526,6 +530,7 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
  输入：UPDATE customers SET cust_name='The Fudds', cust_email='elmer@fudd.com' WHERE cust_id=10005;
  在更新多个列时，只需要使用单个SET命令，每个“列=值”对之间用逗号分隔。
 ```
+
 #### 17.2 删除数据
  - 为了从一个表中删除数据，使用DELETE语句。可以使用两种方式
  1. 从表中删除特定的行，
@@ -555,8 +560,6 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
  ）
 ```
 
-
-
 #### 18.2 更新表
 - 为更新表定义，可使用ALTER TABLE语句。在理想状态下，当表中存储数据之后，该表就不应该再被更新。
 ```
@@ -564,11 +567,13 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 删除刚刚添加的列，可以这样做：
 输入：ALTER TABLE vendors DROP COLUMN vend_phone;
 ```
+
 #### 18.3 删除表
 - 使用DROP TABLE语句即可
 ```
 输入： DROP TABLE custmoers;
 ```
+
 #### 18.4 重命名表
 - 使用RENAME TABLE 语句可以重命名一个表：
 ```
