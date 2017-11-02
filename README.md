@@ -602,4 +602,80 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 - 视图不能索引，也不能有关联的触发器或默认值。
 - 视图可以和表一起使用。例如：编写一条联结表和视图的SELECT语句。
 
+#### 19.3 使用视图
+- 视图用CREATE VIEW 语句来创建
+- 使用SHOW CREATE VIEW viewname;来查看创建视图的语句。
+- 用DROP删除视图，其语法为DROP VIEW viewname;
+- 更新视图时，可以先用DROP再用CREATE，也可以直接用CREATE OR REPLACE VIEW 。如果要更新的视图不存在，则第二条更新语句会创建一个视图；如果存在，则会替换原来的视图。
 
+#### 19.4 利用视图简化复杂的联结
+```
+输入：CREATE VIEW productcustomers AS 
+     SELECT cust_name,cust_contact,prod_id FROM customers,orders,orderitems 
+     WHERE customers.cust_id=orders.cust_id 
+     AND orderitems.order_num=orders.order_num;
+这条语句创建一个名为productcustomers的视图，它联结三个表，以返回已订购了任意产品的所有客户的列表。如果执行了
+SELECT * FROM productcustomers，将列出订购了任意产品的客户。
+```
+#### 19.5 用视图重新格式化检索出的数据
+```
+输入：SELECT Concat(name, '(',country,')') AS vend_title FROM verdors ORDER BY name;
+输出  +----------------------------------+
+      |            vend_title           |
+      |---------------------------------|
+      | ACME （USA)                     |
+      | Anvils  R Us (USA)              |
+      | Furball Inc. (USA)              |
+      | Jet Set (England)               |
+      | Jouets Et Ours (France)         |
+      +---------------------------------+
+  现在，假如经常需要这个格式的结果。不必在每次需要时执行联结，创建一个视图，每次需要时使用它即可。将此语句转化成视图，可按下进行：
+  输入：CREATE VIEW vendorlocations AS 
+        SELECT Concat(name, '(',country,')') AS vend_title FROM verdors ORDER BY name;
+  分析：这条语句使用与以前的SELECT语句相同的查询创建视图。为了检索出以创建所有邮件标签的数据，可如下进行：
+  输入：SELECT * FROM vendorlocations；
+  输出：同上。
+ ```
+ 
+ #### 19.6 用视图过滤不想要的数据
+ - 视图对于应用普通的WHERE子句也很有用。例如，可以定义customeremaillist视图，它过滤没有电子邮件地址的客户。
+ ```
+ 输入：CREATE VIEW customeremaillist AS SELECT cust_id,cust_name,cust_email FROM customers WHERE cust_email IS NOT NULL;
+ 分析：显然，在发送邮件到邮件列表时，需要排除没有电子邮件地址的用户。这里的WHERE子句过滤了cust_email列中具有NULL值的那些行，使他们不被检索出来
+ 输入：SELECT * FROM customeremaillist ；
+ ```
+#### 19.7 使用视图与计算字段
+```
+检索某个特定订单中的物品，计算每种物品的总价格：
+输入：SELECT prod_id,quantity,item_price,quantity * item_price AS expanded_price WHERE order_num=20005;
+输出：+--------+----------+---------+-----------------+
+      |   id   | quantity |  price  | expanded_price |
+      |--------+----------+---------+----------------+
+      |  ANV01 |    10    |   5.99  |     59.90      |
+      |  ANV02 |     3    |   9.99  |     29.97      |
+      |  TNT2  |     5    |  10.00  |     50.00      |
+      |   FB   |     1    |  10.00  |     10.00      |
+      +--------+----------+---------+----------------+      
+为将其转换成一个视图，如下进行：
+输入：CREATE VIEW orderitemsexpanded AS 
+      SELECT order_num,prod_id,quantity,item_price,quantity * item_price AS expanded_price FROM orderitems;
+      
+为检索订单20005的详细内容（上面的输出），如下进行：
+输入：SELECT * FROM orderitemsexpanded WHERE order_num=20005;
+输出：+-------------+---------+-----------+---------+----------------+
+      | order_num   |   id    | quantity |  price  | expanded_price |
+      +-------------|-------- +----------+---------+----------------+
+      |    20005    |  ANV01  |    10    |   5.99  |     59.90      |
+      |    20005    |  ANV02  |     3    |   9.99  |     29.97      |
+      |    20005    |  TNT2   |     5    |  10.00  |     50.00      |
+      |    20005    |   FB    |     1    |  10.00  |     10.00      |
+      +-------------+---------+----------+---------+----------------+  
+```
+#### 19.8 更新视图
+- 分组：（使用GROUP BY和HAVING）
+- 联结；
+- 子查询；
+- 并；
+- 聚集函数（Min()、Count()、Sum()等);
+- DISTINCT;
+- 导出(计算) 列。
