@@ -450,10 +450,9 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
 
 ### 创建高级联结
 #### 14.1 自联结
-
+- 普通子查询：
+- 查询ID为DINTR的物品的供应商生产的其他物品
 ```
- 普通子查询：
- 查询ID为DINTR的物品的供应商生产的其他物品
  输入：SELECT prod_id,prod_name FROM products WHERE vend_id=(SELECT vend_id FROM products WHERE prod_id='DINTR');
  自联结查询：
  输入：SELECT p1.prod_id,p1.prod_name FROM products p1,products p2 WHERE p1.vend_id=p2.vend_id AND p2.prod_id='DTNTR';
