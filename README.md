@@ -447,8 +447,10 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
        AND order_num=20005; 
 ```   
 
+
 ### 创建高级联结
 #### 14.1 自联结
+
 ```
  普通子查询：
  查询ID为DINTR的物品的供应商生产的其他物品
@@ -458,6 +460,7 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
 ```
 
 #### 14.2 外部联结
+
 ```
 为了检索所有客户，包括那些没有订单的客户。
 SELECT customers.cust_id,orders.order_num FROM customers LEFT OUTER JOIN orders ON customers.cust_id=orders.cust_id;
@@ -495,11 +498,14 @@ UNION中的每个查询必须包含相同的列、表达式或聚集函数
 
 ### 插入数据
 #### 16.1 插入完整的行 
+
 ```
 把数据插入表中的最简单方法是使用基本的INSERT语法，它要求指定表名和被插入到新行中的值。
 输入：INSERT INTO customers VALUES（'zhangsan','男'，20）;
 INSERT 语句一般不会产生输出
 ```
+
+
 
 #### 16.2 插入多个行
 ```
@@ -561,6 +567,7 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
  ）
 ```
 
+
 #### 18.2 更新表
 - 为更新表定义，可使用ALTER TABLE语句。在理想状态下，当表中存储数据之后，该表就不应该再被更新。
 ```
@@ -570,6 +577,8 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 ```
 
 #### 18.3 删除表
+
+
 - 使用DROP TABLE语句即可
 ```
 输入： DROP TABLE custmoers;
@@ -577,6 +586,8 @@ VALUES ('Ped','100 Main Street','Los Angelas'，'CA', '90046', 'USA'),
 
 #### 18.4 重命名表
 - 使用RENAME TABLE 语句可以重命名一个表：
+
+
 ```
 输入：RENAME TABLE customer2 TO customers;
 ```
