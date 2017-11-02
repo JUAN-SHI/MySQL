@@ -437,8 +437,6 @@ WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。
 输入：SELECT vend_name,prod_name,prod_price FROM vendors INNER JOIN products ON vendors.vend_id=products.vend_id;
 ```
 
-
-
 #### 13.2 联结多个表
 ```
  查询编号为20005的订单中的物品的prod_name,vend_name,prod_price,quantity
