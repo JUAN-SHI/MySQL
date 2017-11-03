@@ -679,3 +679,44 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
 - 聚集函数（Min()、Count()、Sum()等);
 - DISTINCT;
 - 导出(计算) 列。
+
+### 管理事务处理
+#### 20.1 事务处理
+- 事务处理可以用来维护数据库的完整性，它保证成批的MySQL操作要么完全执行，要么完全不执行。
+- 在使用事务和事务处理时，下面是关于事务处理需要知道的几个术语：
+1. 事务（transaction）指一组SQL语句；
+2. 回退（rollback）指撤销指定SQL语句的过程；
+3. 提交（commit）指将未存储的SQL语句结果写入数据库表；
+4. 保留点（savepoint）指事务处理中设置的临时占位符，你可以对他发布回退（与回退整个事务处理不同）。
+#### 20.2 控制事务处理
+- 管理事务处理的关键在于将SQL语句组分解为逻辑块，并明确规定数据何时应该回退，何时不应该回退。
+- MySQL使用下面的语句来标识事务的开始：
+```
+输入：START TRANSATION
+```
+#### 20.2.1 使用ROLLBACK
+- MySQL的ROLLBACK命令用来回退（撤销）MySQL语句：
+```
+输入：SELECT * FROM ordertotals;
+     START TRANSATION;
+     DELETE FROM ordertotals;
+     SELECT * FROM ordertotals;
+     ROLLBACK;
+     SELECT * FROM ordertotals;
+分析：这个例子从显示ordertotals表的内容开始。首先执行一条SELECT以显示该表不为空。然后开始一个事务处理，用一条DELETE语句删除ordertotals表中的所有行，另一条SELECT语句验证ordertotals确实为空，这时用一条ROLLBACK语句回退START TRANSATION 之后的所有语句，最后一条SELECT语句显示该表不为空。
+显然，ROLLBACK只能在一个事务处理内使用（在执行一条START TRANSATION命令之后。
+   
+- 哪些语句可以回退？
+事务处理用来管理INSERT、UPDATE和DELETE，不能回退SELECT语句。不能回退CREATE或DROP操作。事务处理块中可以使用这两条语句，但如果你执行回退，它们不会被撤。
+```
+#### 20.2.2 使用COMMIT
+- 一般的MySQL语句都是直接针对数据库表执行和编写的，这就是所谓的隐含提交，即提交（写或保存）操作是自动进行的。但是在事务处理块中，提交不会隐含的进行。为进行明确的提交，使用commit语句，如下所示：
+```
+输入：START TRANSACTION；
+      DELETE FROM orderitems WHERE order_num=20010;
+      DELETE FROM orders WHERE order_num=20010;
+      COMMIT;
+分析：在这个例子中，从系统中完全删除订单20010.因为涉及更新两个数据库表orders和orderItems，所以使用事务处理块来保证订单不被部分删除。最后的COMMIT语句仅仅在不出错时写出更改。如果第一条DELETE起作用，但第二条失败，则DELETE不会提交（实际上，它是被自动撤销的）
+* 隐含事务关闭  当COMMIT 或ROLLBACK 语句执行后，事务会自动关闭
+
+      
