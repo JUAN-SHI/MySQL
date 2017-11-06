@@ -703,11 +703,14 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
      SELECT * FROM ordertotals;
      ROLLBACK;
      SELECT * FROM ordertotals;
-分析：这个例子从显示ordertotals表的内容开始。首先执行一条SELECT以显示该表不为空。然后开始一个事务处理，用一条DELETE语句删除ordertotals表中的所有行，另一条SELECT语句验证ordertotals确实为空，这时用一条ROLLBACK语句回退START TRANSATION 之后的所有语句，最后一条SELECT语句显示该表不为空。
-显然，ROLLBACK只能在一个事务处理内使用（在执行一条START TRANSATION命令之后。
+分析：这个例子从显示ordertotals表的内容开始。首先执行一条SELECT以显示该表不为空。然后开始一个事务处理，
+     用一条DELETE语句删除ordertotals表中的所有行，另一条SELECT语句验证ordertotals确实为空，
+     这时用一条ROLLBACK语句回退START TRANSATION 之后的所有语句，最后一条SELECT语句显示该表不为空。
+     显然，ROLLBACK只能在一个事务处理内使用（在执行一条START TRANSATION命令之后。
    
 - 哪些语句可以回退？
-事务处理用来管理INSERT、UPDATE和DELETE，不能回退SELECT语句。不能回退CREATE或DROP操作。事务处理块中可以使用这两条语句，但如果你执行回退，它们不会被撤。
+事务处理用来管理INSERT、UPDATE和DELETE，不能回退SELECT语句。不能回退CREATE或DROP操作。事务处理块中可以使用这两条语句，
+但如果你执行回退，它们不会被撤。
 ```
 #### 20.2.2 使用COMMIT
 - 一般的MySQL语句都是直接针对数据库表执行和编写的，这就是所谓的隐含提交，即提交（写或保存）操作是自动进行的。但是在事务处理块中，提交不会隐含的进行。为进行明确的提交，使用commit语句，如下所示：
@@ -716,7 +719,8 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
       DELETE FROM orderitems WHERE order_num=20010;
       DELETE FROM orders WHERE order_num=20010;
       COMMIT;
-分析：在这个例子中，从系统中完全删除订单20010.因为涉及更新两个数据库表orders和orderItems，所以使用事务处理块来保证订单不被部分删除。最后的COMMIT语句仅仅在不出错时写出更改。如果第一条DELETE起作用，但第二条失败，则DELETE不会提交（实际上，它是被自动撤销的）
+分析：在这个例子中，从系统中完全删除订单20010.因为涉及更新两个数据库表orders和orderItems，所以使用事务处理块来保证订单不被部分删除。
+最后的COMMIT语句仅仅在不出错时写出更改。如果第一条DELETE起作用，但第二条失败，则DELETE不会提交（实际上，它是被自动撤销的）
 * 隐含事务关闭  当COMMIT 或ROLLBACK 语句执行后，事务会自动关闭
 ```
 
@@ -739,11 +743,13 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
         FROM products;
      END;
 
-分析：此存储过程名为productpricing，用CREATE PROCEDURE productpricing()语句定义。如果存储过程接受参数，它们将在（）中列举出来，此存储过程没有参数，但后跟的（）仍然需要。BEBIN和END语句用来限定存储过程体。过程体本身仅是一个简单的SELECT语句
+分析：此存储过程名为productpricing，用CREATE PROCEDURE productpricing()语句定义。如果存储过程接受参数，它们将在（）中列举出来，
+此存储过程没有参数，但后跟的（）仍然需要。BEBIN和END语句用来限定存储过程体。过程体本身仅是一个简单的SELECT语句
 ```
 #### 21.3 删除存储过程
 ```
 输入：DROP PROCEDURE productpricing;
-* 仅当存在时删除：  如果指定的过程不存在，则DROP PROCEDURE 将产生一个错误。当过程存在想删除它时（过程不存在也不产生错误）可使用DROP PROCEDURE productpricing  IF EXISTS
+* 仅当存在时删除：  如果指定的过程不存在，则DROP PROCEDURE 将产生一个错误。当过程存在想删除它时（过程不存在也不产生错误）
+ 可使用DROP PROCEDURE productpricing  IF EXISTS
 ```
 ·
