@@ -752,4 +752,25 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
 * 仅当存在时删除：  如果指定的过程不存在，则DROP PROCEDURE 将产生一个错误。当过程存在想删除它时（过程不存在也不产生错误）
  可使用DROP PROCEDURE productpricing  IF EXISTS
 ```
-#### 21
+#### 21.4 使用参数
+```
+输入： CREATE PROCEDURE productpricing(
+        OUT p1 DECIMAL(8,2),
+        OUT ph DECIMAL(8,2),
+        OUT pa DECIMAL(8,2)
+      )
+      BEGIN
+        SELECT Min(prod_price)
+        INTO p1
+        FROM products;
+        SELECT Max(prod_price)
+        INTO ph
+        FROM products;
+        SELECT Avg(prod_price)
+        INTO pa
+        FROM products;
+      END;
+ 分析： 此存储过程接受3个参数：p1存储产品最低价格，ph存储产品最高价格，pa存储产品平均价格。每个参数必须具有指定的类型，这里使用十进制数。
+       关键字OUT指出相应的参数用来从存储过程传出一个值（返回给调用者）MySQL支持IN（传递给存储过程）、OUT（从存储过程传出）和INOUT
+      （对存储过程传入和传出）类型的参数。存储过程的代码位于BEGIN和END语句内，它们是一系列SELECT语句，用来检索值，然后保存到相应的变量
+      （通过指定INTO关键字）
