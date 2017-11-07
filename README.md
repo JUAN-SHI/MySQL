@@ -774,3 +774,12 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
        关键字OUT指出相应的参数用来从存储过程传出一个值（返回给调用者）MySQL支持IN（传递给存储过程）、OUT（从存储过程传出）和INOUT
       （对存储过程传入和传出）类型的参数。存储过程的代码位于BEGIN和END语句内，它们是一系列SELECT语句，用来检索值，然后保存到相应的变量
       （通过指定INTO关键字）
+  ```
+  #### 21.5 检查存储过程
+  - 为显示用来创建一个存储过程的CREATE语句，使用SHOW CREATE PROCUEDRE STATUS语句
+  ```
+  输入：SHOW CREATE PROCEDURE ordertotal；
+  为了获得包含何时、由谁创建等详细信息的存储过程列表，使用SHOW PROCEDURE STATUS。
+  ```
+
+  输入：SHOW CREATE PROCEDURE ordertotal；
