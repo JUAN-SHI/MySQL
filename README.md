@@ -782,4 +782,41 @@ SELECT * FROM productcustomers，将列出订购了任意产品的客户。
   输入：SHOW CREATE PROCEDURE ordertotal；
   为了获得包含何时、由谁创建等详细信息的存储过程列表，使用SHOW PROCEDURE STATUS。
 ```
+### MySQL语句的语法
+#### ALTER TABLE
+- ALTER TABLE 用来更新已存在表的模式。为了创建新表，应该使用CREATE TABLE。
+#### COMMIT
+- COMMIT用来将事务处理写到数据库。
+#### CREATE INDEX
+- CREATE INDEX 用于在一个或多个列上创建索引。
+```
+输入:CREATE INDEX indexname ON tablename (column [ASC|DESC]......);
+```
+#### CREATE PROCEDURE
+- CREATE PROCEDURE 用于创建存储过程。
+#### CREATE TABLE 
+- CREATE TABLE 用于创建新数据库表。为更新已经存在的表的结构，使用ALTER TABLE
+#### CREATE USER
+- 用于向系统中添加新的用户账号。
+#### CREATE VIEW
+- CREATE VIEW 用来创建一个或多个表上的新视图
+#### DELETE
+- DELETE 从表中删除一行或多行
+#### DROP
+- DROP永久地删除数据对象
+#### INSERT
+- INSERT给表增加一行
+#### INSERT SELECT
+- INSERT SELECT 插入SELECT的结果到一个表
+#### ROLLBACK
+- ROLLBACK用于撤销一个事务处理块。
+#### SAVEPOINT
+- SAVEPOINT为使用ROLLBACK语句设立保留点
+#### SELECT
+- SELECT用于从一个或多个表中检索数据。
+#### START TRANSATION
+- START TRANSACTION表示一个新的事务处理块开始。
+#### UPDATE
+- UPDATE更新表中一行或多行
+
 
